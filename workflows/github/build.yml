@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - master
+  pull_request:
+    branches: 
+      - master
+  
+jobs:
+  build:
+
+    runs-on: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+    
+    - name: .NET Core CLI
+      uses: baruchiro/github-actions@0.0.1
+
+      
+    - name: Nuget Restore
+      run: dotnet restore $ENv:GITHUB_WORKSPACE\src\dotnet-test-runner\dotnet-test-runner.sln
+    
+    - name: Build DotNET35
+      run: |        
+        dotnet build $Env:GITHUB_WORKSPACE\src\dotnet-test-runner\dotnet-test-runner.sln

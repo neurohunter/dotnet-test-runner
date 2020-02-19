@@ -50,7 +50,7 @@ namespace Dotnet.Test.Runner
             }
             dotnetProcess.WaitForExit();
             dotnetProcess.OutputDataReceived -= DotnetProcess_OutputDataReceived;
-            Console.ForegroundColor = OriginalColor;
+            Console.ResetColor();
         }
         private static void DotnetProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -74,8 +74,11 @@ namespace Dotnet.Test.Runner
                             Color = ConsoleColor.Red;
                             TreatNextAsError = true;
                         }
-                        Console.ForegroundColor = Color;
-                        Console.WriteLine($"{message}");
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            Console.ForegroundColor = Color;
+                            Console.WriteLine($"{(message.EndsWith(Environment.NewLine) ? message.Remove(message.LastIndexOf(Environment.NewLine)) : message)}");
+                        }
                     }
                     else
                     {
